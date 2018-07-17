@@ -1,0 +1,323 @@
+/* GRID SYSTEM */
+/** ========================================================================== */
+
+/* Grid Params: */
+/* Name: string
+ * size: number
+ * has-previous: bool
+ * has-next: bool
+*/
+$media-sizes: (
+    ("xs", 0px, false, true),
+    ("sm", 576px, true, true),
+    ("md", 768px, true, true),
+    ("lg", 992px, true, true),
+    ("xl", 1200px, true, false)
+);
+
+$grids: ("xs", "sm", "md", "lg", "xl");
+$grid-length: 12 + 1;
+$grid-padding: 15px;
+
+/* Grid container */
+/* --------------------------------------------------------------------------- */
+
+.container {
+    position: relative;
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 15px;
+    padding-left: 15px;
+    max-width: 950px;
+    z-index: 1;
+}
+
+.container:before,
+.container:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.container-fluid {
+    display: inline-block;
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: $grid-padding;
+    padding-left: $grid-padding;
+}
+
+@media(max-width: 767px) {
+    .container-fluid.container-fluid-mob-negated-paddings {
+        padding-right: 0;
+        padding-left: 0;
+    }
+}
+
+@media(min-width: 768px) {
+    .container-fluid {
+        padding-right: $grid-padding;
+        padding-left: $grid-padding;
+    }
+}
+
+@media(min-width: 1200px) {
+    .container-fluid {
+        padding-right: $grid-padding;
+        padding-left: $grid-padding;
+    }
+    .container-fluid--morepadding {
+        padding-right: 160px;
+        padding-left: 160px;
+    }
+}
+
+.container-fluid--backgrounded {
+    background-color: #fff;
+}
+
+/* Grid row */
+/* --------------------------------------------------------------------------- */
+
+.grid-row {
+    margin: 0 -15px;
+}
+
+.grid-row--bottom {
+    margin-bottom: 20px;
+}
+
+.grid-row:before,
+.grid-row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* FLEX SYSTEM */
+/** ========================================================================== */
+/* Flex row */
+/* --------------------------------------------------------------------------- */
+
+.flex-row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -#{$grid-padding};
+    margin-left: -#{$grid-padding};
+}
+
+/* Grid/flex columns */
+/* --------------------------------------------------------------------------- */
+@each $grid in $grids {
+    @for $index from 1 to $grid-length {
+        .grid-#{$grid}-#{$index} {
+            float: left;
+            width: 100%;
+            padding: 0 $grid-padding;
+        }
+
+        .flex-#{$grid}-#{$index} {
+            position: relative;
+            width: 100%;
+            min-height: 1px;
+            padding-right: $grid-padding;
+            padding-left: $grid-padding;
+        }
+    }
+
+    .flex-#{$grid}-auto {
+        position: relative;
+        width: 100%;
+        min-height: 1px;
+        padding-right: $grid-padding;
+        padding-left: $grid-padding;
+    }
+}
+
+@for $index from 1 to $grid-length {
+    $percentage: percentage($index / 12);
+
+    .grid-xs-#{$index} {
+        width: $percentage;
+    }
+
+    .grid-xs-offset-#{$index} {
+        margin-left: $percentage;
+    }
+
+    .grid-xs-push-#{$index} {
+        position: relative;
+        left: $percentage;
+    }
+
+    .grid-xs-pull-#{$index} {
+        position: relative;
+        right: $percentage;
+    }
+
+    .flex-xs-#{$index} {
+        -ms-flex: 0 0 $percentage;
+        flex: 0 0 $percentage;
+        max-width: $percentage;
+    }
+
+    .flex-xs-order-#{$index} {
+        -ms-flex-order: $index;
+        order: $index;
+    }
+
+    .flex-xs-offset-#{$index} {
+        margin-left: $percentage;
+    }
+}
+
+@for $media-index from 1 through length($media-sizes) {
+    $media: nth($media-sizes, $media-index);
+
+    $grid: nth($media, 1);
+    $size: nth($media, 2);
+    $has-prev: nth($media, 3);
+    $has-next: nth($media, 4);
+
+    @media (min-width: #{$size}) {
+        @if $size != "xs" {
+            @for $index from 1 to $grid-length {
+                $percentage: percentage($index / 12);
+
+                .grid-#{$grid}-#{$index} {
+                    width: $percentage;
+                }
+
+                .grid-#{$grid}-offset-#{$index} {
+                    margin-left: $percentage;
+                }
+
+                .grid-#{$grid}-push-#{$index} {
+                    position: relative;
+                    left: $percentage;
+                }
+
+                .grid-#{$grid}-pull-#{$index} {
+                    position: relative;
+                    right: $percentage;
+                }
+
+                .flex-#{$grid}-#{$index} {
+                    -ms-flex: 0 0 $percentage;
+                    flex: 0 0 $percentage;
+                    max-width: $percentage;
+                }
+
+                .flex-#{$grid}-order-#{$index} {
+                    -ms-flex-order: $index;
+                    order: $index;
+                }
+
+                .flex-#{$grid}-offset-#{$index} {
+                    margin-left: $percentage;
+                }
+            }
+        }
+    }
+
+    @if $has-next {
+        $next-media: nth($media-sizes, $media-index + 1);
+        $next-media-size: nth($next-media, 2);
+
+        @if $has-prev {
+            @media (min-width: $size) and (max-width: $next-media-size - 1) {
+                .hidden-#{$grid} {
+                    display: none !important;
+                }
+
+                .grid-#{$grid}-no-offset,
+                .flex-#{$grid}-no-offset {
+                    margin: 0;
+                }
+
+                .no-padding-#{$grid} {
+                    padding: 0;
+                }
+            }
+        } @else {
+            @media (max-width: $next-media-size - 1) {
+                .hidden-#{$grid} {
+                    display: none !important;
+                }
+
+                .grid-#{$grid}-no-offset,
+                .flex-#{$grid}-no-offset {
+                    margin: 0;
+                }
+
+                .no-padding-#{$grid} {
+                    padding: 0;
+                }
+            }
+        }
+    } @else {
+        @media (min-width: $size) {
+            .hidden-#{$grid} {
+                display: none !important;
+            }
+
+            .grid-#{$grid}-no-offset,
+            .flex-#{$grid}-no-offset {
+                margin: 0;
+            }
+
+            .no-padding-#{$grid} {
+                padding: 0;
+            }
+        }
+    }
+}
+
+/* Modular framework items */
+/* --------------------------------------------------------------------------- */
+
+.clear:before,
+.clear:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.align-top {
+    vertical-align: top;
+}
+
+.align-middle {
+    vertical-align: middle;
+}
+
+.align-bottom {
+    vertical-align: bottom;
+}
+
+.align-left {
+    text-align: left;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.align-right {
+    text-align: right;
+}
+
+.no-padding {
+    padding: 0;
+}
+
+.relative {
+    position: relative;
+}
