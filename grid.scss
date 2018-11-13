@@ -7,28 +7,33 @@
  * has-previous: bool
  * has-next: bool
 */
-$media-sizes: (
-    ("xs", 0px, false, true),
-    ("sm", 576px, true, true),
-    ("md", 768px, true, true),
-    ("lg", 992px, true, true),
-    ("xl", 1200px, true, false)
-);
 
-$grids: ("xs", "sm", "md", "lg", "xl");
-$grid-length: 12 + 1;
-$grid-padding: 15px;
+$xs: 0px !default;
+$sm: 576px !default;
+$md: 768px !default;
+$lg: 992px !default;
+$xl: 1280px !default;
+
+$media-sizes: (
+    ("xs", $xs, false, true),
+    ("sm", $sm, true, true),
+    ("md", $md, true, true),
+    ("lg", $lg, true, true),
+    ("xl", $xl, true, false)
+) !default;
+
+$grid-length: 12 !default;
+
+$grid-padding: 15px !default;
+$grid-padding-small: 10px !default;
 
 /* Grid container */
 /* --------------------------------------------------------------------------- */
 
 .container {
     position: relative;
-    margin-right: auto;
-    margin-left: auto;
-    padding-right: 15px;
-    padding-left: 15px;
-    max-width: 950px;
+    margin: 0 auto;
+    padding: 0 $grid-padding;
     z-index: 1;
 }
 
@@ -39,53 +44,11 @@ $grid-padding: 15px;
     clear: both;
 }
 
-.container-fluid {
-    display: inline-block;
-    width: 100%;
-    margin-right: auto;
-    margin-left: auto;
-    padding-right: $grid-padding;
-    padding-left: $grid-padding;
-}
-
-@media(max-width: 767px) {
-    .container-fluid.container-fluid-mob-negated-paddings {
-        padding-right: 0;
-        padding-left: 0;
-    }
-}
-
-@media(min-width: 768px) {
-    .container-fluid {
-        padding-right: $grid-padding;
-        padding-left: $grid-padding;
-    }
-}
-
-@media(min-width: 1200px) {
-    .container-fluid {
-        padding-right: $grid-padding;
-        padding-left: $grid-padding;
-    }
-    .container-fluid--morepadding {
-        padding-right: 160px;
-        padding-left: 160px;
-    }
-}
-
-.container-fluid--backgrounded {
-    background-color: #fff;
-}
-
 /* Grid row */
 /* --------------------------------------------------------------------------- */
 
 .grid-row {
-    margin: 0 -15px;
-}
-
-.grid-row--bottom {
-    margin-bottom: 20px;
+    margin: 0 -#{$grid-padding};
 }
 
 .grid-row:before,
@@ -97,22 +60,38 @@ $grid-padding: 15px;
 
 /* FLEX SYSTEM */
 /** ========================================================================== */
-/* Flex row */
+/* Flex */
 /* --------------------------------------------------------------------------- */
-
-.flex-row {
-    display: -ms-flexbox;
+.flex {
+    display: -webkit-flex;
     display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    margin-right: -#{$grid-padding};
-    margin-left: -#{$grid-padding};
+    margin: 0 -#{$grid-padding};
+
+    @include flex-warp(wrap);
+
+    &.flex--no-gutter {
+        margin: 0;
+
+        > [class*="flex-"] {
+            padding: 0;
+        }
+    }
+
+    .flex--small-padding {
+        margin: -#{$grid-padding-small};
+
+        > [class*="flex-"] {
+            padding: $grid-padding-small;
+        }
+    }
 }
 
 /* Grid/flex columns */
 /* --------------------------------------------------------------------------- */
-@each $grid in $grids {
-    @for $index from 1 to $grid-length {
+@each $media in $media-sizes {
+    $grid: nth($media, 1);
+
+    @for $index from 1 through $grid-length {
         .grid-#{$grid}-#{$index} {
             float: left;
             width: 100%;
@@ -123,8 +102,7 @@ $grid-padding: 15px;
             position: relative;
             width: 100%;
             min-height: 1px;
-            padding-right: $grid-padding;
-            padding-left: $grid-padding;
+            padding: 0 $grid-padding;
         }
     }
 
@@ -132,12 +110,19 @@ $grid-padding: 15px;
         position: relative;
         width: 100%;
         min-height: 1px;
-        padding-right: $grid-padding;
-        padding-left: $grid-padding;
+        padding: 0 $grid-padding;
+    }
+
+    .flex-#{$grid}-order-first {
+        @include flex-order(-1);
+    }
+
+    .flex-#{$grid}-order-last {
+        @include flex-order($grid-length);
     }
 }
 
-@for $index from 1 to $grid-length {
+@for $index from 1 through $grid-length {
     $percentage: percentage($index / 12);
 
     .grid-xs-#{$index} {
@@ -159,14 +144,12 @@ $grid-padding: 15px;
     }
 
     .flex-xs-#{$index} {
-        -ms-flex: 0 0 $percentage;
-        flex: 0 0 $percentage;
+        @include flex(0 0 $percentage);
         max-width: $percentage;
     }
 
     .flex-xs-order-#{$index} {
-        -ms-flex-order: $index;
-        order: $index;
+        @include flex-order($index);
     }
 
     .flex-xs-offset-#{$index} {
@@ -184,7 +167,7 @@ $grid-padding: 15px;
 
     @media (min-width: #{$size}) {
         @if $size != "xs" {
-            @for $index from 1 to $grid-length {
+            @for $index from 1 through $grid-length {
                 $percentage: percentage($index / 12);
 
                 .grid-#{$grid}-#{$index} {
@@ -206,14 +189,12 @@ $grid-padding: 15px;
                 }
 
                 .flex-#{$grid}-#{$index} {
-                    -ms-flex: 0 0 $percentage;
-                    flex: 0 0 $percentage;
+                    @include flex(0 0 $percentage);
                     max-width: $percentage;
                 }
 
                 .flex-#{$grid}-order-#{$index} {
-                    -ms-flex-order: $index;
-                    order: $index;
+                    @include flex-order($index);
                 }
 
                 .flex-#{$grid}-offset-#{$index} {
@@ -276,9 +257,52 @@ $grid-padding: 15px;
     }
 }
 
+
+.flex-top,
+.flex-middle,
+.flex-bottom,
+.flex-center,
+.flex-right,
+.flex-vh-middle {
+    display: -webkit-flex;
+    display: flex;
+}
+
+.flex-top {
+    -webkit-align-items: flex-start;
+    align-items: flex-start;
+}
+
+.flex-middle {
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+.flex-bottom {
+    -webkit-align-items: flex-end;
+    align-items: flex-end;
+}
+
+.flex-center {
+    -webkit-justify-content: center;
+    justify-content: center;
+}
+
+.flex-right {
+    -webkit-justify-content: flex-end;
+    justify-content: flex-end;
+}
+
+.flex-vh-middle {
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+}
+
+
 /* Modular framework items */
 /* --------------------------------------------------------------------------- */
-
 .clear:before,
 .clear:after {
     content: "";
