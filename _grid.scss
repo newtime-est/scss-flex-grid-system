@@ -26,15 +26,37 @@ $grid-length: 12 !default;
 
 $grid-padding: 15px !default;
 $grid-padding-small: 10px !default;
+$grid-padding-extra-small: 5px !default;
+
+/* Normalize */
+/* --------------------------------------------------------------------------- */
+@-ms-viewport {
+    width: device-width;
+}
+
+html {
+    box-sizing: border-box;
+    -ms-overflow-style: scrollbar;
+}
+
+body {
+    margin: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
 
 /* Grid container */
 /* --------------------------------------------------------------------------- */
-
 .container {
     position: relative;
     margin: 0 auto;
     padding: 0 $grid-padding;
-    z-index: 1;
 }
 
 .container:before,
@@ -49,6 +71,12 @@ $grid-padding-small: 10px !default;
 
 .grid-row {
     margin: 0 -#{$grid-padding};
+
+    &.grid-row--include-margin {
+        > [class*="grid-"] {
+            margin-bottom: 30px;
+        }
+    }
 }
 
 .grid-row:before,
@@ -69,6 +97,10 @@ $grid-padding-small: 10px !default;
 
     @include flex-warp(wrap);
 
+    &.flex--height-inherit {
+        height: inherit;
+    }
+
     &.flex--no-gutter {
         margin: 0;
 
@@ -77,11 +109,25 @@ $grid-padding-small: 10px !default;
         }
     }
 
-    .flex--small-padding {
-        margin: -#{$grid-padding-small};
+    &.flex--include-margin {
+        > [class*="flex-"] {
+            margin-bottom: 30px;
+        }
+    }
+
+    &.flex--small-padding {
+        margin: 0 -#{$grid-padding-small};
 
         > [class*="flex-"] {
-            padding: $grid-padding-small;
+            padding: 0 $grid-padding-small;
+        }
+    }
+
+    &.flex--extra-small-padding {
+        margin: 0 -#{$grid-padding-extra-small};
+
+        > [class*="flex-"] {
+            padding: 0 $grid-padding-extra-small;
         }
     }
 }
@@ -312,6 +358,11 @@ $grid-padding-small: 10px !default;
 
 .hidden {
     display: none !important;
+}
+
+.block {
+    display: block;
+    width: 100%;
 }
 
 .align-top {

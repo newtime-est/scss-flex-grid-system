@@ -1,0 +1,22 @@
+/* Grid - Overwrites default grid variables in _grid.scss */
+/* --------------------------------------------------------------------------- */
+
+$xs: 0px;
+$sm: 576px;
+$md: 768px;
+$lg: 992px;
+$xl: 1280px;
+
+$media-sizes: (
+    ("xs", $xs, false, true),
+    ("sm", $sm, true, true),
+    ("md", $md, true, true),
+    ("lg", $lg, true, true),
+    ("xl", $xl, true, false)
+);
+
+$grid-length: 12;
+
+$grid-padding: 15px;
+$grid-padding-small: 10px;
+$grid-padding-extra-small: 5px;
