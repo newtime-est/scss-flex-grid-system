@@ -28,6 +28,8 @@ $grid-padding: 15px !default;
 $grid-padding-small: 10px !default;
 $grid-padding-extra-small: 5px !default;
 
+$grid-spacing-bottom: 30px !default;
+
 /* Normalize */
 /* --------------------------------------------------------------------------- */
 @-ms-viewport {
@@ -74,7 +76,7 @@ body {
 
     &.grid-row--include-margin {
         > [class*="grid-"] {
-            margin-bottom: 30px;
+            margin-bottom: $grid-spacing-bottom;
         }
     }
 }
@@ -111,7 +113,7 @@ body {
 
     &.flex--include-margin {
         > [class*="flex-"] {
-            margin-bottom: 30px;
+            margin-bottom: $grid-spacing-bottom;
         }
     }
 
